@@ -1,0 +1,34 @@
+name: "Generate BOM"
+description: >
+  Generate a BOM for the project using py-allspice and create an asset with it.
+
+  Currently only works for Altium projects
+inputs:
+  project_path:
+    description: "Path to the project file from the root of the repo"
+    required: true
+  output_file_name:
+    description: "Name of the output file"
+    required: true
+    default: "bom.csv"
+  auth_token:
+    description: "AllSpice API auth token"
+    required: true
+  attributes_mapping:
+    description: "JSON string with the mapping of the attributes to the AllSpice attributes"
+    required: true
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - ${{ github.repository }}
+    - ${{ inputs.project_path }}
+    - ${{ inputs.pcb_file_path }}
+    - "--source_ref"
+    - ${{ github.sha }}
+    - "--allspice_hub_url"
+    - ${{ github.server_url }}
+    - "--attributes_mapping"
+    - ${{ inputs.attributes_mapping }}
+    - "--output_file"
+    - ${{ inputs.output_file_name }}

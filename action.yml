@@ -7,13 +7,13 @@ inputs:
   project_path:
     description: "Path to the project file from the root of the repo"
     required: true
+  pcb_file_path:
+    description: "Path to the PCB file from the root of the repo"
+    required: true
   output_file_name:
     description: "Name of the output file"
     required: true
     default: "bom.csv"
-  auth_token:
-    description: "AllSpice API auth token"
-    required: true
   attributes_mapping:
     description: "JSON string with the mapping of the attributes to the AllSpice attributes"
     required: true

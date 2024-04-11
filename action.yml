@@ -7,7 +7,7 @@ inputs:
   project_path:
     description: "Path to the project file from the root of the repo"
     required: true
-  pcb_file_path:
+  pcb_path:
     description: "Path to the PCB file from the root of the repo"
     required: true
   output_file_name:
@@ -17,13 +17,12 @@ inputs:
   attributes_mapping:
     description: "JSON string with the mapping of the attributes to the AllSpice attributes"
     required: true
+  auth_token:
+    description: "AllSpice Hub authentication token"
 runs:
   using: "docker"
   image: "Dockerfile"
   args:
-    - ${{ github.repository }}
-    - ${{ inputs.project_path }}
-    - ${{ inputs.pcb_file_path }}
     - "--source_ref"
     - ${{ github.sha }}
     - "--allspice_hub_url"
@@ -32,3 +31,8 @@ runs:
     - ${{ inputs.attributes_mapping }}
     - "--output_file"
     - ${{ inputs.output_file_name }}
+    - ${{ github.repository }}
+    - ${{ inputs.project_path }}
+    - ${{ inputs.pcb_path }}
+  env:
+    ALLSPICE_AUTH_TOKEN: ${{ inputs.auth_token }}

@@ -7,7 +7,6 @@ import argparse
 import csv
 import json
 import os
-import subprocess
 import sys
 from contextlib import ExitStack
 
@@ -48,9 +47,6 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-
-    for entry in os.walk("/"):
-        print(entry)
 
     attributes_mapper = AttributesMapping.from_dict(json.loads(args.attributes_mapping))
 

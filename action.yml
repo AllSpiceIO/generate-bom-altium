@@ -30,7 +30,7 @@ runs:
     - "--attributes_mapping"
     - ${{ inputs.attributes_mapping }}
     - "--output_file"
-    - "/github/workspace/${{ inputs.output_file_name }}"
+    - "${{ github.workspace}}/${{ inputs.output_file_name }}"
     - ${{ github.repository }}
     - ${{ inputs.project_path }}
     - ${{ inputs.pcb_path }}

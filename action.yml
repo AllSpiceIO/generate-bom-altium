@@ -17,8 +17,6 @@ inputs:
   attributes_mapping:
     description: "JSON string with the mapping of the attributes to the AllSpice attributes"
     required: true
-  auth_token:
-    description: "AllSpice Hub authentication token"
 runs:
   using: "docker"
   image: "Dockerfile"
@@ -30,9 +28,9 @@ runs:
     - "--attributes_mapping"
     - ${{ inputs.attributes_mapping }}
     - "--output_file"
-    - "/github/workspace/${{ inputs.output_file_name }}"
+    - "${{ github.workspace}}/${{ inputs.output_file_name }}"
     - ${{ github.repository }}
     - ${{ inputs.project_path }}
     - ${{ inputs.pcb_path }}
   env:
-    ALLSPICE_AUTH_TOKEN: ${{ inputs.auth_token }}
+    ALLSPICE_AUTH_TOKEN: ${{ github.token }}

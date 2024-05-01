@@ -99,11 +99,11 @@ if __name__ == "__main__":
             writer = csv.writer(sys.stdout)
 
         header = [
-            "Description",
-            "Designator",
-            "Quantity",
             "Manufacturer",
-            "Part Number",
+            "MFG Part Number",
+            "Quantity",
+            "Reference Designator",
+            "Description",
         ]
 
         writer.writerow(header)

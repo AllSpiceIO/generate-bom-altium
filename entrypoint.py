@@ -81,11 +81,12 @@ if __name__ == "__main__":
     )
     bom_rows = [
         [
-            bom_row.description,
-            ", ".join(bom_row.designators),
-            bom_row.quantity,
             bom_row.manufacturer,
             bom_row.part_number,
+            bom_row.quantity,
+            ", ".join(bom_row.designators),
+            bom_row.description,
+            
         ]
         for bom_row in bom_rows
     ]
@@ -98,11 +99,11 @@ if __name__ == "__main__":
             writer = csv.writer(sys.stdout)
 
         header = [
-            "Description",
-            "Designator",
-            "Quantity",
             "Manufacturer",
-            "Part Number",
+            "MFG Part Number",
+            "Quantity",
+            "Reference Designator",
+            "Description",
         ]
 
         writer.writerow(header)

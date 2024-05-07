@@ -75,7 +75,7 @@ if __name__ == "__main__":
     repo_owner, repo_name = args.repository.split("/")
     repository = allspice.get_repository(repo_owner, repo_name)
     prjpcb_file = args.prjpcb_file
-    group_by = args.group_by.split(",") if args.group_by is not None else None
+    group_by = args.group_by.split(",") if args.group_by else None
 
     print("Generating BOM...", file=sys.stderr)
 

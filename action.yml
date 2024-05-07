@@ -11,9 +11,9 @@ inputs:
     description: "Name of the output file"
     required: true
     default: "bom.csv"
-  columns:
+  columns_json:
     description: >
-      A path to a JSON file mapping columns to the attributes they are from.
+      JSON string mapping columns to the attributes they are from.
     required: true
   group_by:
     description: >
@@ -28,8 +28,8 @@ runs:
     - ${{ github.sha }}
     - "--allspice_hub_url"
     - ${{ github.server_url }}
-    - "--columns"
-    - ${{ inputs.columns }}
+    - "--columns-json"
+    - ${{ inputs.columns_json }}
     - "--group_by"
     - ${{ inputs.group_by }}
     - "--output_file"

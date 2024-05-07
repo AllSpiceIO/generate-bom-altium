@@ -25,12 +25,12 @@ if __name__ == "__main__":
     )
     parser.add_argument("prjpcb_file", help="The path to the PrjPcb file in the source repo.")
     parser.add_argument(
-        "--columns",
+        "--columns-json",
         help=(
-            "A path to a JSON file mapping columns to the attributes they are from. See the README "
-            "for more details. Defaults to 'columns.json'."
+            "JSON string mapping columns to the attributes they are from. See the README "
+            "for more details. Defaults to '{}'"
         ),
-        default="columns.json",
+        default="{}",
     )
     parser.add_argument(
         "--source_ref",
@@ -58,9 +58,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    columns_file = args.columns
-    with open(columns_file, "r") as f:
-        columns = json.loads(f.read())
+    columns = json.loads(args.columns_json)
 
     # Use Environment Variables to store your auth token. This keeps your token
     # secure when sharing code.

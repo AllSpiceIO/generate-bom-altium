@@ -58,6 +58,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    print(f"columns={args.columns_json!r}", file=sys.stderr)
     columns = json.loads(args.columns_json)
 
     # Use Environment Variables to store your auth token. This keeps your token

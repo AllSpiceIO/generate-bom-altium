@@ -34,7 +34,7 @@ Add the following steps to your actions:
 ### Customizing the Attributes Extracted by the BOM Script
 
 This script relies on a `columns.json` file. This file maps the Component
-Attributes in the SchDoc files to the columns (right) of the BOM (left). 
+Attributes in the SchDoc files (right) to the columns of the BOM (left). 
 An example for `columns.json` file content is:
 
 ```json

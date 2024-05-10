@@ -61,6 +61,7 @@ if __name__ == "__main__":
             "The variant of the project to generate the BOM for. If not present, the BOM will be "
             "generated for the default variant."
         ),
+        default="",
     )
 
     args = parser.parse_args()
@@ -95,7 +96,7 @@ if __name__ == "__main__":
         columns,
         group_by=group_by,
         ref=args.source_ref,
-        variant=args.variant,
+        variant=args.variant if args.variant else None,
     )
 
     with ExitStack() as stack:

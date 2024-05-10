@@ -16,11 +16,11 @@ Add the following steps to your actions:
   with:
     project_path: Archimajor.PrjPcb
     pcb_path: Archimajor.PcbDoc
-    columns: columns.json
+    columns: .allspice/columns.json
     output_file_name: bom.csv
 ```
 
-where `columns.json` looks like:
+where `.allspice/columns.json` looks like:
 
 ```json
 {

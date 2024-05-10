@@ -16,7 +16,9 @@ Add the following steps to your actions:
   with:
     # The path to the Altium project file in your repo.
     project_path: Archimajor.PrjPcb
-    # A path to a JSON file mapping columns to the attributes they are from.
+    # [optional] A path to a JSON file mapping columns to the component attributes
+    # they are from. This file must be provided.
+    # Default: 'columns.json'
     columns: .allspice/columns.json
     # [optional] The path to the output file that will be generated.
     # Default: 'bom.csv'

@@ -34,15 +34,16 @@ Add the following steps to your actions:
 ### Customizing the Attributes Extracted by the BOM Script
 
 This script relies on a `columns.json` file. This file maps the Component
-Attributes in the SchDoc files to the columns of the BOM. An example for
-`columns.json` file content is:
+Attributes in the SchDoc files to the columns (right) of the BOM (left). 
+An example for `columns.json` file content is:
 
 ```json
 {
-  "description": ["PART DESCRIPTION"],
-  "designator": ["Designator"],
-  "manufacturer": ["Manufacturer", "MANUFACTURER"],
-  "part_number": ["PART", "MANUFACTURER #"]
+  "Part ID": ["_part_id"]
+  "Part Number": ["PART", "MANUFACTURER #"]
+  "Manufacturer": ["Manufacturer", "MANUFACTURER"],
+  "Designator": ["Designator"],
+  "Description": ["PART DESCRIPTION"],
 }
 ```
 
@@ -54,7 +55,7 @@ If there is only one attribute, you can omit the list and just use a string. The
 script checks these attributes in order, and uses the _first_ one it finds. So
 if both `PART` and `MANUFACTURER #` are defined, it will use `PART`.
 
-Note that py-allspice also adds two attributes: `_part_id` and `_description`.
+Note that py-allspice also adds two static attributes: `_part_id` and `_description`.
 These correspond to the Library Reference and description fields of the
 component. The underscore is added ahead of the name to prevent these additional
 attributes from overriding any of your own. You can use these like:
@@ -66,9 +67,28 @@ attributes from overriding any of your own. You can use these like:
 }
 ```
 
+Where the BOM generation will use the attribute "PART DESCRIPTION" if it exists
+for a given component, and "_description" otherwise. Same for "PART" and "_part_id".
+
 By default, the script picks up a `columns.json` file from the working
 directory. If you want to keep it in a different place, or rename it, you can
 pass the `--columns` argument to the script to specify where it is.
+
+## Group By
+
+You can also group lines by a column value. The most common is `_part_id`. You
+can combine this with the columns json example above, like so:
+
+```
+- name: Generate BOM
+  uses: https://hub.allspice.io/Actions/generate-bom-altium@main
+  with:
+    project_path: Archimajor.PrjPcb
+    columns: .allspice/columns.json
+    group_by: 'Part ID'
+```
+
+Which will generate a BOM squashed by components with matchin Part IDs.
 
 ## Variants
 

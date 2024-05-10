@@ -20,6 +20,11 @@ inputs:
       A comma-separated list of columns to group the BOM by. If not present, the
       BOM will be flat.
     default: ''
+  variant:
+    description: >
+      The variant of the project to generate the BOM for. If not present, the
+      BOM will be generated for the default variant.
+    default: ''
 runs:
   using: "docker"
   image: "Dockerfile"
@@ -32,6 +37,8 @@ runs:
     - ${{ inputs.columns }}
     - "--group_by"
     - ${{ inputs.group_by }}
+    - "--variant"
+    - ${{ inputs.variant }}
     - "--output_file"
     - "${{ github.workspace}}/${{ inputs.output_file_name }}"
     - ${{ github.repository }}

@@ -12,7 +12,7 @@ Add the following steps to your actions:
   uses: actions/checkout@v3
 
 - name: Generate BOM
-  uses: https://hub.allspice.io/Actions/generate-bom-altium@main
+  uses: https://hub.allspice.io/Actions/generate-bom-altium@v0.2
   with:
     # The path to the Altium project file in your repo.
     project_path: Archimajor.PrjPcb
@@ -79,9 +79,9 @@ pass the `--columns` argument to the script to specify where it is.
 You can also group lines by a column value. The most common is `_part_id`. You
 can combine this with the columns json example above, like so:
 
-```
+```yaml
 - name: Generate BOM
-  uses: https://hub.allspice.io/Actions/generate-bom-altium@main
+  uses: https://hub.allspice.io/Actions/generate-bom-altium@v0.2
   with:
     project_path: Archimajor.PrjPcb
     columns: .allspice/columns.json
@@ -97,7 +97,7 @@ to the script. For example:
 
 ```yaml
 - name: Generate BOM
-  uses: https://hub.allspice.io/Actions/generate-bom-altium@main
+  uses: https://hub.allspice.io/Actions/generate-bom-altium@v0.2
   with:
     project_path: Archimajor.PrjPcb
     columns: .allspice/columns.json

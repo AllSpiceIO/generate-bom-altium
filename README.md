@@ -15,7 +15,6 @@ Add the following steps to your actions:
   uses: https://hub.allspice.io/Actions/generate-bom-altium@main
   with:
     project_path: Archimajor.PrjPcb
-    pcb_path: Archimajor.PcbDoc
     columns: .allspice/columns.json
     output_file_name: bom.csv
 ```

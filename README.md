@@ -41,11 +41,11 @@ An example for `columns.json` file content is:
 
 ```json
 {
-  "Part ID": ["_part_id"]
-  "Part Number": ["PART", "MANUFACTURER #"]
+  "Part ID": ["_part_id"],
+  "Part Number": ["PART", "MANUFACTURER #"],
   "Manufacturer": ["Manufacturer", "MANUFACTURER"],
   "Designator": ["Designator"],
-  "Description": ["PART DESCRIPTION"],
+  "Description": ["PART DESCRIPTION"]
 }
 ```
 

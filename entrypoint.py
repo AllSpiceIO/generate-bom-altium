@@ -96,8 +96,8 @@ if __name__ == "__main__":
         args.source_file,
         columns,
         group_by=group_by,
-        ref=args.source_ref,
-        variant=args.variant,
+        ref=args.source_ref if args.source_ref else "main",
+        variant=args.variant if args.variant else None,
     )
 
     with ExitStack() as stack:

@@ -1,11 +1,16 @@
 name: "Generate BOM"
 description: >
-  Generate a BOM for the project using py-allspice and create an asset with it.
+  Generate a BOM for the project using py-allspice and attach it as an artifact
+  to the run.
 
-  Currently only works for Altium projects
+  Works for Altium and OrCAD projects.
+
 inputs:
-  project_path:
-    description: "Path to the project file from the root of the repo"
+  source_path:
+    description: >
+      Path to the source file from the root of the repo. For Altium projects,
+      this should be the path to the .PrjPcb file. For OrCAD projects, this
+      should be the path to the .dsn file.
     required: true
   output_file_name:
     description: "Name of the output file"
@@ -19,12 +24,13 @@ inputs:
     description: >
       A comma-separated list of columns to group the BOM by. If not present, the
       BOM will be flat.
-    default: ''
+    default: ""
   variant:
     description: >
       The variant of the project to generate the BOM for. If not present, the
-      BOM will be generated for the default variant.
-    default: ''
+      BOM will be generated for the default variant. Not supported for OrCAD
+      projects.
+    default: ""
 runs:
   using: "docker"
   image: "Dockerfile"
@@ -42,6 +48,6 @@ runs:
     - "--output_file"
     - "${{ github.workspace}}/${{ inputs.output_file_name }}"
     - ${{ github.repository }}
-    - ${{ inputs.project_path }}
+    - ${{ inputs.source_path }}
   env:
     ALLSPICE_AUTH_TOKEN: ${{ github.token }}

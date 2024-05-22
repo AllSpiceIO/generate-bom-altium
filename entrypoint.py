@@ -11,19 +11,24 @@ import sys
 from contextlib import ExitStack
 
 from allspice import AllSpice
-from allspice.utils.bom_generation import generate_bom_for_altium
+from allspice.utils.bom_generation import generate_bom
 
 
 if __name__ == "__main__":
-    # Parse command line arguments. If you're writing a special purpose script,
-    # you can hardcode these values instead of using command line arguments.
     parser = argparse.ArgumentParser(
-        prog="generate_bom", description="Generate a BOM from a PrjPcb file."
+        prog="generate_bom", description="Generate a BOM from a project repository."
     )
     parser.add_argument(
         "repository", help="The repo containing the project in the form 'owner/repo'"
     )
-    parser.add_argument("prjpcb_file", help="The path to the PrjPcb file in the source repo.")
+    parser.add_argument(
+        "source_file",
+        help=(
+            "The path to the source file used to generate the BOM. If this is an Altium project, "
+            "this should be the .PrjPcb file. For an OrCAD project, this should be the .dsn file. "
+            "Example: 'Archimajor.PrjPcb', 'Schematics/Beagleplay.dsn'."
+        ),
+    )
     parser.add_argument(
         "--columns",
         help=(
@@ -59,9 +64,8 @@ if __name__ == "__main__":
         "--variant",
         help=(
             "The variant of the project to generate the BOM for. If not present, the BOM will be "
-            "generated for the default variant."
+            "generated for the default variant. This is not used for OrCAD projects."
         ),
-        default="",
     )
 
     args = parser.parse_args()
@@ -70,8 +74,6 @@ if __name__ == "__main__":
     with open(columns_file, "r") as f:
         columns = json.loads(f.read())
 
-    # Use Environment Variables to store your auth token. This keeps your token
-    # secure when sharing code.
     auth_token = os.environ.get("ALLSPICE_AUTH_TOKEN")
     if auth_token is None:
         print("Please set the environment variable ALLSPICE_AUTH_TOKEN")
@@ -84,19 +86,18 @@ if __name__ == "__main__":
 
     repo_owner, repo_name = args.repository.split("/")
     repository = allspice.get_repository(repo_owner, repo_name)
-    prjpcb_file = args.prjpcb_file
     group_by = args.group_by.split(",") if args.group_by else None
 
     print("Generating BOM...", file=sys.stderr)
 
-    bom_rows = generate_bom_for_altium(
+    bom_rows = generate_bom(
         allspice,
         repository,
-        prjpcb_file,
+        args.source_file,
         columns,
         group_by=group_by,
         ref=args.source_ref,
-        variant=args.variant if args.variant else None,
+        variant=args.variant,
     )
 
     with ExitStack() as stack:

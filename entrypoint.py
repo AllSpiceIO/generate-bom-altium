@@ -82,9 +82,7 @@ if __name__ == "__main__":
     if args.allspice_hub_url is None:
         allspice = AllSpice(token_text=auth_token)
     else:
-        allspice = AllSpice(
-            token_text=auth_token, allspice_hub_url=args.allspice_hub_url
-        )
+        allspice = AllSpice(token_text=auth_token, allspice_hub_url=args.allspice_hub_url)
 
     repo_owner, repo_name = args.repository.split("/")
     repository = allspice.get_repository(repo_owner, repo_name)

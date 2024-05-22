@@ -5,8 +5,8 @@
 
 import argparse
 import csv
-import json
 import os
+import yaml
 import sys
 from contextlib import ExitStack
 
@@ -32,10 +32,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "--columns",
         help=(
-            "A path to a JSON file mapping columns to the attributes they are from. See the README "
-            "for more details. Defaults to 'columns.json'."
+            "A path to a YAML file mapping columns to the attributes they are from. See the README "
+            "for more details. Defaults to 'columns.yml'."
         ),
-        default="columns.json",
+        default="columns.yml",
     )
     parser.add_argument(
         "--source_ref",
@@ -71,8 +71,17 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     columns_file = args.columns
-    with open(columns_file, "r") as f:
-        columns = json.loads(f.read())
+    columns = {}
+    try:
+        with open(columns_file, "r") as f:
+            columns_data = yaml.safe_load(f.read())
+            for column_value in columns_data["columns"]:
+                columns[column_value["column_name"]] = column_value["part_attributes"]
+    except KeyError as e:
+        print(f"Error: columns file {columns_file} does not seem to be in the right format.")
+        print("Please refer to the README for more information.")
+        print(f"Caused by: {e}")
+        sys.exit(1)
 
     auth_token = os.environ.get("ALLSPICE_AUTH_TOKEN")
     if auth_token is None:

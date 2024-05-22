@@ -1,4 +1,4 @@
-# Generate BOM for Altium Projects
+# Generate BOM for E-CAD Projects
 
 Generate a BOM output file for an Altium project on AllSpice Hub using [AllSpice Actions](https://learn.allspice.io/docs/actions-cicd).
 
@@ -12,10 +12,10 @@ Add the following steps to your actions:
   uses: actions/checkout@v3
 
 - name: Generate BOM
-  uses: https://hub.allspice.io/Actions/generate-bom-altium@v0.2
+  uses: https://hub.allspice.io/Actions/generate-bom@v0.3
   with:
-    # The path to the Altium project file in your repo.
-    project_path: Archimajor.PrjPcb
+    # The path to the project file in your repo (.PrjPcb for Altium, .DSN for OrCad).
+    source_path: Archimajor.PrjPcb
     # [optional] A path to a JSON file mapping columns to the component attributes
     # they are from. This file must be provided.
     # Default: 'columns.json'
@@ -37,12 +37,12 @@ Add the following steps to your actions:
 
 This script relies on a `columns.json` file. This file maps the Component
 Attributes in the SchDoc files (right) to the columns of the BOM (left). 
-An example for `columns.json` file content is:
+
+An example for Altium `columns.json` file content is:
 
 ```json
 {
-  "Part ID": ["_part_id"],
-  "Part Number": ["PART", "MANUFACTURER #"],
+  "Part Number": ["PART", "MANUFACTURER #", "_part_id"],
   "Manufacturer": ["Manufacturer", "MANUFACTURER"],
   "Designator": ["Designator"],
   "Description": ["PART DESCRIPTION"]
@@ -57,7 +57,18 @@ If there is only one attribute, you can omit the list and just use a string. The
 script checks these attributes in order, and uses the _first_ one it finds. So
 if both `PART` and `MANUFACTURER #` are defined, it will use `PART`.
 
-Note that py-allspice also adds two static attributes: `_part_id` and `_description`.
+An example for OrCad `columns.json` file content is:
+
+```json
+{
+  "Part Number": ["Part Number", "_name"],
+  "Designator": ["Part Reference"],
+  "Type": ["Part Type"],
+  "Value": ["Value"]
+}
+```
+
+Note that py-allspice also adds static attributes: `_part_id`, `_description`, and `_name`.
 These correspond to the Library Reference and description fields of the
 component. The underscore is added ahead of the name to prevent these additional
 attributes from overriding any of your own. You can use these like:
@@ -83,7 +94,7 @@ can combine this with the columns json example above, like so:
 
 ```yaml
 - name: Generate BOM
-  uses: https://hub.allspice.io/Actions/generate-bom-altium@v0.2
+  uses: https://hub.allspice.io/Actions/generate-bom@v0.3
   with:
     project_path: Archimajor.PrjPcb
     columns: .allspice/columns.json
@@ -99,7 +110,7 @@ to the script. For example:
 
 ```yaml
 - name: Generate BOM
-  uses: https://hub.allspice.io/Actions/generate-bom-altium@v0.2
+  uses: https://hub.allspice.io/Actions/generate-bom@v0.3
   with:
     project_path: Archimajor.PrjPcb
     columns: .allspice/columns.json

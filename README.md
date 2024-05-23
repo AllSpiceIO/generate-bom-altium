@@ -7,7 +7,7 @@ Generate a BOM output file for an Altium project on AllSpice Hub using [AllSpice
 Add the following steps to your actions:
 
 ```yaml
-# Checkout is only needed if columns.json is committed in your Altium project repo.
+# Checkout is only needed if columns.yml is committed in your Altium project repo.
 - name: Checkout
   uses: actions/checkout@v3
 
@@ -16,89 +16,109 @@ Add the following steps to your actions:
   with:
     # The path to the project file in your repo (.PrjPcb for Altium, .DSN for OrCad).
     source_path: Archimajor.PrjPcb
-    # [optional] A path to a JSON file mapping columns to the component attributes
-    # they are from. This file must be provided.
-    # Default: 'columns.json'
-    columns: .allspice/columns.json
+    # [optional] A path to a YAML file mapping columns to the component
+    # attributes they are from.
+    # Default: 'columns.yml'
+    columns: .allspice/columns.yml
     # [optional] The path to the output file that will be generated.
     # Default: 'bom.csv'
     output_file_name: bom.csv
     # [optional] A comma-separated list of columns to group the BOM by. If empty
     # or not present, the BOM will be flat.
     # Default: ''
-    group_by: 'Part ID'
+    group_by: "Part ID"
     # [optional] The variant of the project to generate the BOM for. If empty
     # or not present, the BOM will be generated for the default variant.
     # Default: ''
-    variant: ''
+    variant: ""
 ```
 
 ### Customizing the Attributes Extracted by the BOM Script
 
-This script relies on a `columns.json` file. This file maps the Component
-Attributes in the SchDoc files (right) to the columns of the BOM (left). 
+This script relies on a YAML file to specify the columns in the BOM and which
+attributes or properties of the components they are populated from. This file is
+typically called `columns.yml` and can be checked into your repo. To learn more
+about YAML, [check out the AllSpice Knowledge Base.](https://learn.allspice.io/docs/yaml)
 
-An example for Altium `columns.json` file content is:
+The format of this YAML file is as follows:
 
-```json
-{
-  "Part Number": ["PART", "MANUFACTURER #", "_part_id"],
-  "Manufacturer": ["Manufacturer", "MANUFACTURER"],
-  "Designator": ["Designator"],
-  "Description": ["PART DESCRIPTION"]
-}
+```yml
+columns:
+  - name: Manufacturer
+    part_attributes:
+      - Manufacturer
+      - MANUFACTURER
+  - name: Part Number
+    part_attributes:
+      - PART
+      - MANUFACTURER \#
+      - _part_id
+  - name: Designator
+    part_attributes: Designator
+  - name: Description
+    part_attributes:
+      - PART DESCRIPTION
+      - _description
 ```
 
-In this file, the keys are the names of the columns in the BOM, and the values
-are a list of the names of the attributes in the SchDoc files that should be
-mapped to that column. For example, if your part number is stored either in the
-`PART` or `MANUFACTURER #` attribute, you would add both of those to the list.
-If there is only one attribute, you can omit the list and just use a string. The
-script checks these attributes in order, and uses the _first_ one it finds. So
-if both `PART` and `MANUFACTURER #` are defined, it will use `PART`.
+First, you have the key `columns:` which is mapped to a list. Each element of
+the list has two key/value pairs. The first is `name`, which is used to
+as the name of the column. Next, you have `part_attributes`. This can either be
+just a string (like in the case of the `Designator` column) or a list of strings
+(like in the other cases.)
 
-An example for OrCad `columns.json` file content is:
+If `part_attributes` is just a string, that property or attribute of the
+component is used as the value for that column. If that property is not present
+in a particular part, that column will be blank for that part. If
+`part_attributes` is a list, those properties will be checked in the order they
+are defined for each part. The _first_ property found is used as the value for
+that column in the row for that part. So if both `PART` and `MANUFACTURER #` are
+defined, it will use `PART`.
 
-```json
-{
-  "Part Number": ["Part Number", "_name"],
-  "Designator": ["Part Reference"],
-  "Type": ["Part Type"],
-  "Value": ["Value"]
-}
+An example for OrCad `columns.yml` file content is:
+
+```yml
+columns:
+  - name: Part Number
+    part_attributes:
+      - Part Number
+      - _name
+  - name: Designator
+    part_attributes: Part Reference
+  - name: Type
+    part_attributes: Part Type
+  - name: Value
+    part_attributes: Value
 ```
 
-Note that py-allspice also adds static attributes: `_part_id`, `_description`, and `_name`.
-These correspond to the Library Reference and description fields of the
-component. The underscore is added ahead of the name to prevent these additional
-attributes from overriding any of your own. You can use these like:
-
-```json
-{
-  "Description": ["PART DESCRIPTION", "_description"],
-  "Part Number": ["PART", "_part_id"]
-}
-```
-
-Where the BOM generation will use the attribute "PART DESCRIPTION" if it exists
-for a given component, and "_description" otherwise. Same for "PART" and "_part_id".
-
-By default, the script picks up a `columns.json` file from the working
+By default, the action will pick up a `columns.yml` file from the working
 directory. If you want to keep it in a different place, or rename it, you can
-pass the `--columns` argument to the script to specify where it is.
+pass the `--columns` argument to the step in the workflow to specify where it
+is.
+
+### Py-allspice injected attributes
+
+Note that py-allspice also adds a few static attributes, which are taken from
+the part itself, and not from the properties or attributes. For Altium projects,
+`_part_id` and `_description` are available, which correspond to the Library
+Reference and Description fields of the component. For OrCAD projects, `_name`
+is available, which corresponds to the name of the component.
+
+The underscore is added ahead of the name to prevent these additional attributes
+from overriding any of your own.
 
 ## Group By
 
 You can also group lines by a column value. The most common is `_part_id`. You
-can combine this with the columns json example above, like so:
+can combine this with the columns YAML example above, like so:
 
 ```yaml
 - name: Generate BOM
   uses: https://hub.allspice.io/Actions/generate-bom@v0.3
   with:
     project_path: Archimajor.PrjPcb
-    columns: .allspice/columns.json
-    group_by: 'Part ID'
+    columns: .allspice/columns.yml
+    group_by: "Part ID"
 ```
 
 Which will generate a BOM squashed by components with matchin Part IDs.
@@ -113,9 +133,9 @@ to the script. For example:
   uses: https://hub.allspice.io/Actions/generate-bom@v0.3
   with:
     project_path: Archimajor.PrjPcb
-    columns: .allspice/columns.json
+    columns: .allspice/columns.yml
     output_file_name: bom-lite.csv
-    variant: 'LITE'
+    variant: "LITE"
 ```
 
 When no variant is given, the BOM is generated without considering any variants.

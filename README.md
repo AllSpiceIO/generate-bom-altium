@@ -44,25 +44,25 @@ The format of this YAML file is as follows:
 
 ```yml
 columns:
-  - column_name: Manufacturer
+  - name: Manufacturer
     part_attributes:
       - Manufacturer
       - MANUFACTURER
-  - column_name: Part Number
+  - name: Part Number
     part_attributes:
       - PART
       - MANUFACTURER \#
       - _part_id
-  - column_name: Designator
+  - name: Designator
     part_attributes: Designator
-  - column_name: Description
+  - name: Description
     part_attributes:
       - PART DESCRIPTION
       - _description
 ```
 
 First, you have the key `columns:` which is mapped to a list. Each element of
-the list has two key/value pairs. The first is `column_name`, which is used to
+the list has two key/value pairs. The first is `name`, which is used to
 as the name of the column. Next, you have `part_attributes`. This can either be
 just a string (like in the case of the `Designator` column) or a list of strings
 (like in the other cases.)
@@ -79,15 +79,15 @@ An example for OrCad `columns.yml` file content is:
 
 ```yml
 columns:
-  - column_name: Part Number
+  - name: Part Number
     part_attributes:
       - Part Number
       - _name
-  - column_name: Designator
+  - name: Designator
     part_attributes: Part Reference
-  - column_name: Type
+  - name: Type
     part_attributes: Part Type
-  - column_name: Value
+  - name: Value
     part_attributes: Value
 ```
 

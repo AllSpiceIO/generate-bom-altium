@@ -76,7 +76,7 @@ if __name__ == "__main__":
         with open(columns_file, "r") as f:
             columns_data = yaml.safe_load(f.read())
             for column_value in columns_data["columns"]:
-                columns[column_value["column_name"]] = column_value["part_attributes"]
+                columns[column_value["name"]] = column_value["part_attributes"]
     except KeyError as e:
         print(f"Error: columns file {columns_file} does not seem to be in the right format.")
         print("Please refer to the README for more information.")

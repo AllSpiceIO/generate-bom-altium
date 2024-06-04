@@ -44,31 +44,31 @@ The format of this YAML file is as follows:
 
 ```yml
 columns:
-  - name: Manufacturer
+  - name: "Manufacturer"
     part_attributes:
-      - Manufacturer
-      - MANUFACTURER
-  - name: Part Number
+      - "Manufacturer"
+      - "MANUFACTURER"
+  - name: "Part Number"
     part_attributes:
-      - PART
-      - MANUFACTURER \#
-      - _part_id
-  - name: Designator
-    part_attributes: Designator
-  - name: Description
+      - "PART"
+      - "MANUFACTURER #"
+      - "_part_id"
+  - name: "Designator"
+    part_attributes: "Designator"
+  - name: "Description"
     part_attributes:
-      - PART DESCRIPTION
-      - _description
+      - "PART DESCRIPTION"
+      - "_description"
 ```
 
 First, you have the key `columns:` which is mapped to a list. Each element of
-the list has two key/value pairs. The first is `name`, which is used to
-as the name of the column. Next, you have `part_attributes`. This can either be
+the list has two key/value pairs. The first is `name`, which will be the column
+name in the output file. Next, you have `part_attributes`. This can either be
 just a string (like in the case of the `Designator` column) or a list of strings
-(like in the other cases.)
+(like in the other cases).
 
-If `part_attributes` is just a string, that property or attribute of the
-component is used as the value for that column. If that property is not present
+If `part_attributes` is a string, that property or attribute of the component
+is used as the value for that column. If that property is not present
 in a particular part, that column will be blank for that part. If
 `part_attributes` is a list, those properties will be checked in the order they
 are defined for each part. The _first_ property found is used as the value for
@@ -79,20 +79,20 @@ An example for OrCad `columns.yml` file content is:
 
 ```yml
 columns:
-  - name: Part Number
+  - name: "Part Number"
     part_attributes:
-      - Part Number
-      - _name
-  - name: Designator
-    part_attributes: Part Reference
-  - name: Type
-    part_attributes: Part Type
-  - name: Value
-    part_attributes: Value
+      - "Part Number"
+      - "_name"
+  - name: "Designator"
+    part_attributes: "Part Reference"
+  - name: "Type"
+    part_attributes: "Part Type"
+  - name: "Value"
+    part_attributes: "Value"
 ```
 
 By default, the action will pick up a `columns.yml` file from the working
-directory. If you want to keep it in a different place, or rename it, you can
+directory. If you want to keep it in a different place or rename it, you can
 pass the `--columns` argument to the step in the workflow to specify where it
 is.
 
